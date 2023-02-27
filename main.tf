@@ -137,11 +137,11 @@ resource "datadog_monitor_json" "cpu_all_nodes_monitor" {
   	"id": 112194388,
   	"name": "CPU load is very high on {{host.name}}",
   	"type": "query alert",
-  	"query": "sum(last_5m):max:system.cpu.user{*} + max:system.cpu.guest{*} + max:system.cpu.system{*} > 90",
+  	"query": "avg(last_5m):avg:system.cpu.user{host:control} by {host} + avg:system.cpu.guest{host:control} by {host} + avg:system.cpu.system{host:control} by {host} + avg:system.cpu.iowait{host:control} by {host} > 90",
   	"message": "{{#is_alert}} To fix follow these steps\n1.SSH\n2.HTOP\n3. Check top process PID\n4. sudo kill <PID>\n{{/is_alert}} \n\n\n{{#is_recovery}} CPU load is back to normal, phew! {{/is_recovery}} \n\n@slack-alerts",
   	"tags": [],
   	"options": {
-    "new_host_delay": 300,      
+    "new_host_delay": 300,
   		"thresholds": {
   			"critical": 90,
   			"critical_recovery": 70,
